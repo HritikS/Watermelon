@@ -19,21 +19,22 @@ def getArea(img, n):
     boxes = []
     img_copy = img.copy()
     area = []
+    s = img.shape[0] * img.shape[1]
     for i in range(n):
         x, y, w, h = cv2.boundingRect(contours[i])
         box = cv2.boxPoints(cv2.minAreaRect(contours[i]))
         box = box.astype('int')
         boxes.append(box)
         cv2.putText(img_copy, str(i+1), (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 10, (255, 0, 0), 2)
-        area.append(cv2.contourArea(contours[i]))
+        area.append((cv2.contourArea(contours[i]) / s) * 1000)
     
     cv2.imwrite('./output.png', cv2.drawContours(img_copy, contours = boxes, contourIdx = -1, color = (255, 0, 0), thickness = 2))
 
     print("Image saved!")
     
-    return area
+    return area, 24
 
 
 if __name__ =="__main__":
     image = cv2.imread('./sampleSemi.png')
-    print("Areas: ", getArea(image, 2))
+    print("Areas & conc : ", getArea(image, 2))
